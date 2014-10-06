@@ -1,0 +1,255 @@
+<!-- Mes infos (right element) -->
+<nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-right cbp-spmenu-right-myinfos">
+    <h3>
+        <span class="glyphicon glyphicon-pencil"></span>
+        Mes informations
+        <div class="button_close">
+            <a href="#"><img src="https://cdn1.iconfinder.com/data/icons/app-tab-bar-icons-for-iphone/30/Close_delete_remove_exit_cross_x_button_error_window_user_no.png"></a>
+        </div>
+    </h3>
+    <div class="add_article">
+    </div>
+</nav>
+
+<!-- Confidentialité (right element) -->
+<nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-right cbp-spmenu-right-confidentiality">
+    <h3>
+        <span class="glyphicon glyphicon-pencil"></span>
+        Confidentialité
+        <div class="button_close">
+            <a href="#"><img src="https://cdn1.iconfinder.com/data/icons/app-tab-bar-icons-for-iphone/30/Close_delete_remove_exit_cross_x_button_error_window_user_no.png"></a>
+        </div>
+    </h3>
+    <div class="testt">
+
+        <!-- Options email -->
+        <a href="#" class="link_show_msg" id="link_show_changement_email"><span class="glyphicon glyphicon-envelope"></span><span class="option_confidentiality"> Votre email</span></a>
+        <div class="changement_email">
+            {{ render(controller('HeliosBlogBundle:Blog:changeEmail', {'blogid': bloguser.id, 'blog': app.request.attributes.get('blog')})) }}
+        </div>
+
+        <!-- Options password -->
+        <a href="#" class="link_show_msg" id="link_show_changement_password"><span class="glyphicon glyphicon-lock"></span><span class="option_confidentiality"> Mot de passe</span></a>
+        <div class="changement_password">
+            {{ render(controller('HeliosBlogBundle:Blog:changePassword', {'blogid': bloguser.id, 'blog': app.request.attributes.get('blog')})) }}
+        </div>
+
+        <!-- Options articles -->
+        <a href="#" class="link_show_msg" id="link_show_options_articles"><span class="glyphicon glyphicon-file"></span><span class="option_confidentiality"> Articles</span></a>
+        <div class="options_articles">
+            Vos articles sont visibles à :
+            <div class="center">
+                <select class="selectpicker" data-show-icon="true">
+                    <option data-icon="glyphicon glyphicon-eye-open">Tout le monde</option>
+                    <option data-icon="glyphicon glyphicon-user">Amis</option>
+                    <option data-icon="glyphicon glyphicon-eye-close">Vous seul</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Options chat -->
+        <a href="#" class="link_show_msg"><span class="glyphicon glyphicon-pencil"></span><span class="option_confidentiality"> Messages privés et chat</span></a>
+        <div class="options_chat">
+            Envoyer un son lorsque vous recevez un nouveau message :
+            <div class="center">
+                <select class="selectpicker">
+                    <option data-icon="glyphicon glyphicon-ok">Oui</option>
+                    <option data-icon="glyphicon glyphicon-remove">Non</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Statut compte -->
+        <a href="#" class="link_show_msg"><span class="glyphicon glyphicon-info-sign"></span><span class="option_confidentiality"> Statut du compte</span></a>
+        <div class="options_chat">
+            Votre compte est : standard
+        </div>
+    </div>
+</nav>
+
+<!-- Left menu element-->
+<nav class="push cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left">
+    <h3>Ajouter un article
+        <div class="button_close">
+            <a href="#"><img src="https://cdn1.iconfinder.com/data/icons/app-tab-bar-icons-for-iphone/30/Close_delete_remove_exit_cross_x_button_error_window_user_no.png"></a>
+        </div>
+    </h3>
+    <div id="add_article"></div>
+</nav>
+
+<!-- Left menu avatar element-->
+<nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left cbp-spmenu-left-uploadavatar">
+    <h3>
+        <span class="glyphicon glyphicon-upload"></span>
+        Uploader un avatar
+        <div class="button_close">
+            <a href="#"><img src="https://cdn1.iconfinder.com/data/icons/app-tab-bar-icons-for-iphone/30/Close_delete_remove_exit_cross_x_button_error_window_user_no.png"></a>
+        </div>
+    </h3>
+    <div id="upload_avatar">
+        {{ render(controller('HeliosBlogBundle:Blog:uploadAvatar', {'blog': app.request.attributes.get('blog')})) }}
+    </div>
+</nav>
+
+<!-- Left menu avatar element-->
+<nav class="click_editavatar cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left cbp-spmenu-left-editavatar">
+    <h3>Modifier l'avatar
+        <div class="button_close">
+            <a href="#"><img src="https://cdn1.iconfinder.com/data/icons/app-tab-bar-icons-for-iphone/30/Close_delete_remove_exit_cross_x_button_error_window_user_no.png"></a>
+        </div>
+    </h3>
+    <div id="edit_avatar">
+        {{ render(controller('HeliosBlogBundle:Blog:modifierAvatar', {'avatar': bloguser.avatar.id, 'blog': app.request.attributes.get('blog')})) }}
+    </div>
+</nav>
+
+<!-- Liste photos (Left menu) -->
+<nav class="click_editavatar cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left cbp-spmenu-left-listavatars">
+    <h3>Vos photos
+        <div class="button_close">
+            <a href="#"><img src="https://cdn1.iconfinder.com/data/icons/app-tab-bar-icons-for-iphone/30/Close_delete_remove_exit_cross_x_button_error_window_user_no.png"></a>
+        </div>
+    </h3>
+    <div id="avatar_listephotos_container">
+        {% include "HeliosBlogBundle:Blog:listephotos.html.twig" %}
+    </div>
+</nav>
+
+<!-- name edit element (Left menu)-->
+<nav class="click_editname cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left cbp-spmenu-left-editname">
+    <h3>Modifier le nom
+        <div class="button_close">
+            <a href="#"><img src="https://cdn1.iconfinder.com/data/icons/app-tab-bar-icons-for-iphone/30/Close_delete_remove_exit_cross_x_button_error_window_user_no.png"></a>
+        </div>
+    </h3>
+    <div id="edit_name">
+        {{ render(controller('HeliosBlogBundle:Blog:modifierNomAjax', {'blogid': bloguser.id, 'blog': app.request.attributes.get('blog')})) }}
+    </div>
+</nav>
+
+<!-- Add article (right element) -->
+<nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-right cbp-spmenu-right-article">
+    <h3>
+        <span class="glyphicon glyphicon-pencil"></span>
+        Ajouter un article
+        <div class="button_close">
+            <a href="#"><img src="https://cdn1.iconfinder.com/data/icons/app-tab-bar-icons-for-iphone/30/Close_delete_remove_exit_cross_x_button_error_window_user_no.png"></a>
+        </div>
+    </h3>
+    <div class="add_article">
+        {{ render(controller('HeliosBlogBundle:Blog:ajouter', {'blog': app.request.attributes.get('blog')})) }}
+    </div>
+</nav>
+
+<!-- Right menu element-->
+<nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-right cbp-spmenu-right-editarticle">
+    <h3>Editer un article
+        <div class="button_close">
+            <a href="#"><img src="https://cdn1.iconfinder.com/data/icons/app-tab-bar-icons-for-iphone/30/Close_delete_remove_exit_cross_x_button_error_window_user_no.png"></a>
+        </div>
+    </h3>
+    <div id="edit_article">
+
+    </div>
+</nav>
+
+<!-- Right menu repondre article-->
+<nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-right cbp-spmenu-right-reparticle">
+    <h3>Répondre
+        <div class="button_close">
+            <a href="#"><img src="https://cdn1.iconfinder.com/data/icons/app-tab-bar-icons-for-iphone/30/Close_delete_remove_exit_cross_x_button_error_window_user_no.png"></a>
+        </div>
+    </h3>
+    <div class="rep_article">
+
+    </div>
+</nav>
+
+<!-- Right menu element-->
+<nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-right cbp-spmenu-right-notifs link-menu">
+    <h3>
+        <span class="glyphicon glyphicon-bell"></span>
+        Notifications
+        <div class="button_close">
+            <a href="#"><img src="https://cdn1.iconfinder.com/data/icons/app-tab-bar-icons-for-iphone/30/Close_delete_remove_exit_cross_x_button_error_window_user_no.png"></a>
+        </div>
+    </h3>
+    {% include "HeliosBlogBundle:Blog:notifications.html.twig" %}
+</nav>
+
+<!-- Right menu amis -->
+<nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-right cbp-spmenu-right-amis">
+    <h3>Vos amis</h3>
+    <div class="add_article">
+        {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+            {{ render(controller('HeliosBlogBundle:Blog:listeAmis', {'bloguser': bloguser.id })) }}
+        {% endif %}
+    </div>
+</nav>
+
+<!-- Chat module (right menu) -->
+<nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-right cbp-spmenu-right-chat">
+    <h3>{{ blog.user.username }}</h3>
+    <div class="add_article">
+        <div class="notifs_chat">
+            Blablabla
+        </div>
+        <div class="messages_chat">
+            <div class='bubble_left'>"+e.data+"</div>
+            <div class='bubble_right'>"+e.data+"</div>
+            <div class='bubble_left'>"+e.data+"</div>
+        </div>
+        <textarea class="message_chat" name="message" id="message"></textarea>
+    </div>
+</nav>
+
+<script>
+    $(function() {
+        var user = $("#blog_username").val();
+        var conn_expediteur = new WebSocket('ws://localhost:8080?'+user);
+        conn_expediteur.onopen = function(e) {
+            console.log("WebSockets connection opened");
+        };
+
+    conn_expediteur.onmessage = function(e) {
+        console.log(e.data);
+
+        // Quand on reçoit un message instantannée
+        $(".add_article").append("<div class='bubble_right'>"+e.data+"</div>");
+    };
+
+    $('.message_chat').keyup(function(e) {
+        if(e.keyCode == 13) { // KeyCode de la touche entrée
+            conn_expediteur.send(JSON.stringify({
+                to: $('#blogusername').val(),
+                data: $('.message_chat').val()
+            }));
+
+            // On vide le champ  de texte quand le message est envoyé
+            $(".add_article").append("<div class='bubble_left'>"+$('.message_chat').val()+"</div>");
+            $('.message_chat').val("");
+        }
+    });
+});
+</script>
+
+<!-- Top menu element-->
+<nav class="cbp-spmenu cbp-spmenu-horizontal cbp-spmenu-top">
+    <h3>Ajouter un article</h3>
+</nav>
+<!-- Bottom menu element-->
+<nav class="cbp-spmenu cbp-spmenu-horizontal cbp-spmenu-bottom">
+    <h3>Menu</h3>
+    <a href="#">Celery seakale</a>
+    <a href="#">Dulse daikon</a>
+    <a href="#">Zucchini garlic</a>
+    <a href="#">Catsear azuki bean</a>
+    <a href="#">Dandelion bunya</a>
+    <a href="#">Rutabaga</a>
+    <a href="#">Celery seakale</a>
+    <a href="#">Dulse daikon</a>
+    <a href="#">Zucchini garlic</a>
+    <a href="#">Catsear azuki bean</a>
+    <a href="#">Dandelion bunya</a>
+    <a href="#">Rutabaga</a>
+</nav>

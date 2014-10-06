@@ -1,0 +1,211 @@
+{# src/Helios/BlogBundle/Resources/views/Blog/article.html.twig #}
+
+<script>
+    $(function() {
+        $(".comments").hide();
+        $("#view_comments_article"+{{ article.id }}).click(function(e) {
+            e.preventDefault();
+            $(".comments").slideToggle(400, function() {
+                // Animation complete.
+                //$(".comments").fadeToggle(400);
+            });
+        });
+    });
+
+    $(function() {
+        var id = $("#article_id"+ {{ article.id }}).val();
+        $(".button_rep"+ {{ article.id }}).click(function(e) {
+            e.preventDefault();
+            $(".rep_article"+id).css("display","block");
+        });
+    });
+
+    $(function() {
+        $("#button_like"+{{ article.id }}).click(function(){
+            var id = $("#article_id"+ {{ article.id }}).val();
+            var blog = $("#blog_username").val();
+            $.ajax({
+                type: "GET",
+                url: Routing.generate('heliosblog_ajouter_like', { id: id, blog: blog }),
+                cache: false,
+                success: function(data){
+                    $("#nb_likes"+ {{ article.id }}).html(data);
+                },
+                error: function(xhr,err){
+                    $(".likes").html("Vous devez vous connecter pour ça !");
+                }
+            });
+            return false;
+        });
+    });
+
+    $(function() {
+        $("#delete_article"+{{ article.id }}).click(function(){
+            var id = $("#article_id"+ {{ article.id }}).val();
+            var blog = $("#blog_username").val();
+            $.ajax({
+                type: "GET",
+                url: Routing.generate('heliosblog_supprimer', { id: id,  blog: blog }),
+                cache: false,
+                success: function(data){
+                    $(".article"+{{ article.id }}).fadeOut(400, function() {
+                        // Animation complete.
+                        //$(".comments").fadeToggle(400);
+                    });
+                },
+                error: function(data){
+                    $(".likes").html(data);
+                }
+            });
+            return false;
+        });
+    });
+
+    $(function() {
+        $("#form_add_comment").submit(function(){
+            var postData = $(this).serializeArray();
+            $(".presentation_loader").show();
+            $.ajax({
+                type: "POST",
+                url: $("#form_add_comment").attr("action"),
+                data: postData,
+                cache: false,
+                success: function(data){
+                    $(".comment_image_loader{{ article.id }}"+{{ article.id }}).hide();
+                    /*if($(".comments").is(":visible")) {
+
+                    }
+                    else {
+
+                    }*/
+                    $( ".comments" ).fadeIn( "slow", function() {
+                        // Animation complete
+                    });
+                },
+                error: function(xhr,err){
+                    $(".contenu_article").html(xhr.responseText);
+                    alert(xhr.responseText);
+                }
+            });
+            return false;
+        });
+    });
+</script>
+
+{# On utilise une variable temporaire, qu'on définit à false si elle n'est pas déjà définit #}
+{% set accueil = accueil|default(false) %}
+{% set first = first|default(false) %}
+
+{# On utilise une macro Twig pour afficher :
+   * Soit le nom de l'auteur anonyme de l'auteur
+   * Soit son nom et un lien vers son profil s'il était identifié #}
+{% import "HeliosUserBundle::userHelpers.html.twig" as userHelpers %}
+
+<div itemscope itemtype="http://schema.org/Article" class="article{{ article.id }}">
+
+    <div class="titre_article {% if first %} titleFirstBody {% else %} titleBody {% endif %}">
+
+        {# Si on est sur la page d'accueil, on fait un lien vers l'article, sinon non #}
+        {% if accueil %}
+            <a href="{{ path('heliosblog_voir', {'slug': article.slug, 'blog': article.user} ) }}">{{ article.titre }}</a>
+        {% else %}
+            {{ article.titre }}
+        {% endif %}
+    </div>
+
+    <div class="articleBody marginArticleBody" itemprop="articleBody">
+      {# On vérifie qu'une image soit bien associée à l'article #}
+
+        <hr />
+
+        {# On affiche le corps du message. #}
+        <div class="corps_article">
+            <div class="infos_message">
+                <img class="image_avatar" src={{ asset(blog.avatar.webPath) }} alt={{ blog.avatar.alt }} />
+                <i>
+                    <span class="author_article" itemprop="author">{{ userHelpers.link(article.user, article.auteur) }}</span><br/>
+                    <span class="date_article">Le <time datetime="{{ article.date|date('c') }}" itemprop="datePublished">{{ article.date|date('d/m/Y') }} à {{ article.date|date('H:i') }}</time></span>,
+                </i>
+                {% if is_granted('IS_AUTHENTICATED_REMEMBERED')
+                    and app.user.username == article.user.username
+                    and app.request.attributes.get('_route') == 'heliosblog_accueil'%}
+                <div class="btn-group options_article">
+                    <button type="button" class="addavatar btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" id="menu_presentation" role="menu">
+                        <li><a class="toggle-menu menu-right-editarticle click_editarticle" href="{{ path('heliosblog_modifier', {'id': article.id, 'blog': blog.id}) }}">Editer</a></li>
+                        <li><a id="delete_article{{ article.id }}" href="#">Supprimer</a></li>
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+            <div class="contenu_article">
+                {# On parse les messages en MarkDown grâce à KnpMardownBundle #}
+                {{ article.contenu|markdown }}
+            </div>
+            {# On affiche les catégories éventuelles #}
+            {% if article.tags.count > 0 %}
+                Tags :
+                {% for tag in article.tags %}
+                    <a href="{{ path('heliosblog_tag', {'tag': tag.tag }) }}">
+                        <button class="btn btn-danger btn-xs" type="button">
+                            {{ tag.tag }}
+                        </button>
+                    </a>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <hr />
+        <input class="article_id" id="article_id{{ article.id }}" type="hidden" value="{{ article.id }}"/>
+
+        <div class="pied_article">
+
+            <div class="comments_action">
+                {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                    <a class="button_rep{{ article.id }}" href="#">
+                        <button class="btn btn-default btn-xs" type="button">Répondre</button>
+                    </a>
+                {% endif %}
+                {% if article.commentaires.count != 0 %}
+                    <a id="view_comments_article{{ article.id }}" href="#">
+                        {{  article.commentaires.count }} réponses.
+                    </a>
+                {% endif %}
+                <img class="comment_image_loader{{ article.id }}" src="{{ asset('img/ajax-comment-loader-arrows.gif') }}" />
+            </div>
+
+            <div class="likes">
+                <span id="nb_shares{{ article.id }}">{{  article.likes.count }}</span> <a id="button_like{{ article.id }}" href="#"><span class="glyphicon glyphicon-share"> </span></a>
+                <span class="modal_addarticle"  id="#">{{  article.likes.count }}</span> <a class="modal_addarticle" href="#"><span class="glyphicon glyphicon-thumbs-up"></span></a>
+            </div>
+
+            <div class="rep_article{{ article.id }}">
+                {{ render(controller('HeliosBlogBundle:Blog:ajouterCommentaire', {'article': article.id})) }}
+            </div>
+
+            {# On affiche les compétences éventuelles #}
+            {% if article.articleCompetences|length > 0 %}
+                - Compétences utilisées :
+                {% for articleCompetence in article.articleCompetences %}
+                    {{ articleCompetence.competence.nom }} : {{ articleCompetence.textNiveau }}{% if not loop.last %}, {% else %}.{% endif %}
+                {% endfor %}
+            {% endif %}
+        </div>
+
+    </div>
+
+    <div class="comments">
+        {% for commentaire in article.commentaires %}
+            {% include "HeliosBlogBundle:Blog:commentaire.html.twig" %}
+        {% endfor %}
+    </div>
+
+    <!--
+        <span class='st_facebook_hcount' st_url="{{ url('heliosblog_voir', {'slug': article.slug, 'blog': "azerty"}) }}" displayText='Facebook'></span>
+        <span class='st_twitter_hcount' st_url="{{ url('heliosblog_voir', {'slug': article.slug, 'blog': "azerty"}) }}" st_title="{{ article.titre }} - sur Tutoriel-Symfony2.fr" displayText='Tweet'></span>
+        <span class='st_plusone_hcount' st_url="{{ url('heliosblog_voir', {'slug': article.slug, 'blog': "azerty"}) }}" displayText='Google +1'></span>
+        <span class='st_linkedin_hcount' st_url="{{ url('heliosblog_voir', {'slug': article.slug, 'blog': "azerty"}) }}" displayText='LinkedIn'></span>
+    -->
+</div>

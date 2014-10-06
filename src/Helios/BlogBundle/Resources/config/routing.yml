@@ -1,0 +1,115 @@
+heliosblog_accueil:
+    pattern:   /{page}
+    defaults:  { _controller: HeliosBlogBundle:Blog:index, page: 1 }
+    requirements:
+        page:  \d+
+
+heliosblog_uploadavatar:
+    pattern:   /uploadphoto
+    defaults:  { _controller: HeliosBlogBundle:Blog:uploadAvatar }
+    options:
+         expose: true
+    requirements:
+         id:  \d+
+
+heliosblog_editavatar:
+    pattern:   /editphoto/{avatar}
+    defaults:  { _controller: HeliosBlogBundle:Blog:modifierAvatar }
+    requirements:
+         id:  \d+
+
+heliosblog_ajustavatar:
+    pattern:   /ajustavatar/{avatar}/{positionY}
+    defaults:  { _controller: HeliosBlogBundle:Blog:ajusterAvatar }
+    methods:  POST|GET
+    options:
+         expose: true
+    requirements:
+         id:  \d+
+
+heliosblog_validavatar:
+    pattern:   /validavatar/{avatar}/{tempFilename}
+    defaults:  { _controller: HeliosBlogBundle:Blog:validAvatar }
+    methods:  POST
+    options:
+         expose: true
+    requirements:
+         id:  \d+
+
+heliosblog_editname_ajax:
+    pattern:   /editname/{blogid}
+    defaults:  { _controller: HeliosBlogBundle:Blog:modifierNomAjax }
+    methods:  POST
+    options:
+         expose: true
+    requirements:
+         id:  \d+
+
+heliosblog_ajouter:
+    pattern:   /ajouter
+    defaults:  { _controller: HeliosBlogBundle:Blog:ajouter }
+
+heliosblog_modifier:
+    pattern:   /modifier/{id}
+    defaults:  { _controller: HeliosBlogBundle:Blog:modifier }
+    requirements:
+        id:  \d+
+
+heliosblog_supprimer:
+    pattern:   /supprimer/{id}
+    defaults:  { _controller: HeliosBlogBundle:Blog:supprimer }
+    options:
+        expose: true
+    requirements:
+        id:  \d+
+
+heliosblog_feed:
+    pattern:   /feed.rss
+    defaults:  { _controller: HeliosBlogBundle:Blog:feed }
+
+heliosblog_voir:
+    pattern:   /{slug}
+    defaults:  { _controller: HeliosBlogBundle:Blog:voir }
+
+heliosblog_ajouter_commentaire:
+    pattern:  /ajouter/{id}/commentaire
+    defaults: { _controller: HeliosBlogBundle:Blog:ajouterCommentaire }
+    methods:  POST
+    requirements:
+        id:      \d+
+
+heliosblog_supprimer_commentaire:
+    pattern:   /supprimer/commentaire/{id}
+    defaults:  { _controller: HeliosBlogBundle:Blog:supprimerCommentaire }
+    requirements:
+        id:  \d+
+
+heliosblog_ajouter_like:
+    pattern:  /like/{id}
+    defaults: { _controller: HeliosBlogBundle:Blog:ajouterLike }
+    methods:  POST|GET
+    options:
+        expose: true
+    requirements:
+        id:      \d+
+
+heliosblog_ajouter_ami:
+    pattern:  /addami/{bloguser}/{ami}
+    defaults: { _controller: HeliosBlogBundle:Blog:ajouterAmi }
+    methods:  GET
+    requirements:
+        id:      \d+
+
+heliosblog_change_password:
+    pattern:  /changepassword
+    defaults: { _controller: HeliosBlogBundle:Blog:changePassword }
+    methods:  GET|POST
+    requirements:
+        id:      \d+
+
+heliosblog_change_email:
+    pattern:  /changeemail
+    defaults: { _controller: HeliosBlogBundle:Blog:changeEmail }
+    methods:  GET|POST
+    requirements:
+        id:      \d+

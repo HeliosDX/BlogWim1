@@ -1,0 +1,11 @@
+{# src/Helios/BlogBundle/Resources/views/layout.html.twig #}
+
+{% extends "::layout_manager.html.twig" %}
+
+{% block body %}
+
+    {# On définit un nouveau block, que les vues du bundle pourront remplir #}
+    {% block heliosmanager_body %}
+    {% endblock %}
+
+{% endblock %}

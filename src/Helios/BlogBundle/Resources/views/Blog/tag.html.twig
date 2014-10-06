@@ -1,0 +1,11 @@
+{% extends "HeliosBlogBundle::layout.html.twig" %}
+
+{% block bloglayout %}
+
+    {% for article in articles %}
+        {% include "HeliosBlogBundle:Blog:article.html.twig" with {'accueil': true} %}
+    {% else %}
+        <p>Pas (encore !!) d'articles</p>
+    {% endfor %}
+
+{% endblock %}

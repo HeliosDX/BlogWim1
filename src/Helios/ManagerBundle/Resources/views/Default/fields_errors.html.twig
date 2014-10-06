@@ -1,0 +1,12 @@
+{# Pour personnaliser l'affichage des erreurs #}
+{% block form_errors %}
+    {% spaceless %}
+        {% if errors|length > 0 %}
+            <ul>
+                {% for error in errors %}
+                    <li><span class="label label-important">{{ error.message }}</span></li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endspaceless %}
+{% endblock form_errors %}

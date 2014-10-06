@@ -1,0 +1,14 @@
+{% if (liste_blogs) %}
+    <li class=divider></li>
+    {% for blog in liste_blogs %}
+        <li class="dropdown-submenu">
+            <a href="{{ path('heliosmanager_ajouterblog') }}"><i class="icon-book"></i> {{ blog.name }}</a>
+            <ul class="dropdown-menu">
+                <li><a href="{{ path('heliosmanager_ajouterblog') }}"><i class="icon-edit"></i>Voir le blog</a></li>
+                <li class=divider></li>
+                <li><a href="{{ path('heliosmanager_ajouterblog') }}"><i class="icon-edit"></i>Gérer les articles</a></li>
+                <li><a href="{{ path('heliosmanager_ajouterarticle') }}"><i class="icon-plus"></i>Ajouter un article</a></li>
+            </ul>
+        </li>
+    {% endfor %}
+{% endif %}

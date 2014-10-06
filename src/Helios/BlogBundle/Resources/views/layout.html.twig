@@ -1,0 +1,17 @@
+{# src/Helios/BlogBundle/Resources/views/layout.html.twig #}
+
+{% extends "::layout.html.twig" %}
+
+{% block title %}
+    Blog - {{ parent() }}
+{% endblock %}
+
+{% block body %}
+
+    {# On définit un sous-titre commun à toutes les pages du bundle, par exemple #}
+
+    {# On définit un nouveau block, que les vues du bundle pourront remplir #}
+    {% block heliosblog_body %}
+    {% endblock %}
+
+{% endblock %}

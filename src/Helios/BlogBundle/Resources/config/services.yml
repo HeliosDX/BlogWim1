@@ -1,0 +1,94 @@
+parameters:
+#    helios_blog.example.class: Helios\BlogBundle\Example
+    helios_user_security.login_success_handler.class: Helios\UserBundle\Security\LoginSuccessHandler
+
+services:
+
+    heliosblog.blog:
+        class:     Helios\BlogBundle\Twig\HeliosExtension
+        arguments:
+            - @service_container
+            - @doctrine.orm.entity_manager
+        tags:
+            -  { name: twig.extension }
+
+    heliosblog.type.tags:
+            class: Helios\BlogBundle\Form\TagsType
+            arguments: ["@doctrine.orm.entity_manager"]
+            tags:
+                - { name: form.type, alias: tags }
+
+    heliosblog.antispam:
+        class:     Helios\BlogBundle\Antispam\HeliosAntispam
+        arguments: [@mailer, 5]
+        calls:
+            - [ setLocale, [%locale%] ]
+        tags:
+            -  { name: twig.extension }
+        
+    heliosblog.censure_listener:
+        class: Helios\BlogBundle\Bigbrother\CensureListener
+        arguments:
+            - [1, 2]                # 1er argument = liste des id des membres à surveiller (totalement arbitraire)
+            - %heliosblog.dest_email%  # 2e argument = le destinataire des emails
+            - @mailer               # 3e argument = le service pour envoyer des emails
+        tags:
+            - { name: kernel.event_listener, event: heliosblog.bigbrother.post_message, method: onMessagePost }
+         
+    heliosblog.beta_listener:
+        class: Helios\BlogBundle\Beta\BetaListener
+        arguments: ["2013-01-01"]
+        tags:
+            - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse, priority: 2 }
+
+    heliosblog.paramconverter_test:
+        class:     Helios\BlogBundle\ParamConverter\TestParamConverter
+        arguments: ['Helios\BlogBundle\Entity\Site', @doctrine.orm.entity_manager]
+        tags:
+            - { name: request.param_converter, priority: 20 }
+
+    heliosblog.validator.akismet:
+        class:     Helios\BlogBundle\Akismet\AkismetValidator
+        arguments: [@ornicar_akismet, @security.context]
+        scope:     request
+        tags:
+            - { name: validator.constraint_validator, alias: akismet }
+
+    heliosblog.validator.antiflood:                                # Le nom du service
+        class:     Helios\BlogBundle\Validator\AntiFloodValidator  # La classe du service, ici notre validateur déjà créé
+        arguments: [@request, @doctrine.orm.entity_manager]     # Les données qu'on injecte au service : la requête et l'EntityManager
+        scope:     request                                      # Comme on injecte la requête, on doit préciser ce scope
+        tags:
+            - { name: validator.constraint_validator, alias: heliosblog_antiflood }  # C'est avec l'alias qu'on retrouvera le service
+
+    heliosblog.chat:
+        class:     Helios\BlogBundle\Chat\Chat
+        arguments:
+            - @service_container
+            - @doctrine.orm.entity_manager
+        tags:
+            -  { name: chat }
+
+    helios.upload_listener:
+        class: Helios\BlogBundle\EventListener\UploadListener
+        arguments: [@doctrine]
+        tags:
+            - { name: kernel.event_listener, event: oneup_uploader.post_upload, method: onUpload }
+
+    helios_user_security.login_success_handler:
+        class:  %helios_user_security.login_success_handler.class%
+        arguments:  [@router, @security.context]
+        tags:
+            - { name: 'monolog.logger', channel: 'security' }
+
+    helios_user.change_password.form.type:
+        class: Helios\UserBundle\Form\ChangePasswordUserFormType
+        arguments: [%fos_user.model.user.class%]
+        tags:
+            - { name: form.type, alias: helios_user_change_password }
+
+    helios_user.profile.form.type:
+            class: Helios\UserBundle\Form\ProfileUserFormType
+            arguments: [%fos_user.model.user.class%]
+            tags:
+                - { name: form.type, alias: helios_user_profile }

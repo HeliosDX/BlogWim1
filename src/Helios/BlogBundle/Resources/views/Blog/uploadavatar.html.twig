@@ -1,0 +1,153 @@
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/jquery-ui.min.js"></script>
+<script type="text/javascript" src="http://www.plupload.com/plupload/js/plupload.full.min.js"></script>
+<script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+<script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+
+<div class="alert alert-danger" id="console_upload" role="alert">Your browser doesn't have Flash, Silverlight or HTML5 support.</div>
+
+<form id="form_uploadavatar" action="{{ path('heliosblog_uploadavatar', {'blog': app.request.attributes.get('blog')}) }}" method="post" {{ form_enctype(form) }}>
+
+    <div id="avatar_dropzone" class="well">
+
+        <div id="uploader">
+            <a id="pickfiles" href="#">
+                <button type="button" class="btn btn-default" id="button_upload">
+                    <span class="glyphicon glyphicon-star"></span> Choisir une image
+                </button>
+            </a>
+        </div>
+
+        <div id="before_avatar_upload">
+            <img id="icon_drag_and_drop" src ="http://dockphp.com/img/drag-icon.png"/>
+            <br/>
+            ... Ou faites un glisser-époser de votre image sur ce cadre !
+        </div>
+
+        <div id="dropzone_instructions" class="avatar_edit">
+
+        </div>
+
+    </div>
+
+    <div id="avatar_fin_upload">
+        <a id="pickfiles" class="button_valid_editavatar" href="#">
+            <button type="button" class="btn btn-success">
+                <span class="glyphicon glyphicon-ok"></span> Enregistrer
+            </button>
+        </a>
+        <a id="pickfiles" href="#">
+            <button type="button" class="btn btn-danger">
+                <span class="glyphicon glyphicon-remove"></span> Annuler
+            </button>
+        </a>
+    </div>
+
+    <!--
+    {#}{ form_widget(form) }#}
+
+    <a class="button_valid_editavatar" href="#">
+        <button class="btn btn-default" type="submit">Enregistrer</button>
+    </a>
+-->
+</form>
+
+
+<div id="filelist">Your browser doesn't have Flash, Silverlight or HTML5 support.</div>
+<br />
+
+<br />
+
+<script type="text/javascript">
+
+    var blog = $("#blogusername").val();
+
+    // Custom example logic
+
+    var uploader = new plupload.Uploader({
+        runtimes : 'html5,flash,silverlight,html4',
+
+        browse_button : 'pickfiles', // you can pass in id...
+
+        drop_element : 'avatar_dropzone',
+
+        url : "{{ oneup_uploader_endpoint('img') }}",
+
+        multi_selection: false,
+
+        filters : {
+            max_file_size : '10mb',
+            mime_types: [
+                {title : "Image files", extensions : "jpg,gif,png"}
+            ]
+        },
+
+        // Flash settings
+        flash_swf_url : 'http://www.plupload.com/plupload/js/Moxie.swf',
+
+        // Silverlight settings
+        silverlight_xap_url : 'http://www.plupload.com/plupload/js/Moxie.xap',
+
+
+        init: {
+            PostInit: function() {
+                document.getElementById('filelist').innerHTML = '';
+            },
+
+            FilesAdded: function(up, files) {
+                plupload.each(files, function(file) {
+                    $("#before_avatar_upload").html("");
+                    document.getElementById('before_avatar_upload').innerHTML += '<div id="' + file.id + '">' + file.name + ' (' + plupload.formatSize(file.size) + ') <b></b></div>';
+                    uploader.start();
+                    return false;
+                });
+            },
+
+            UploadProgress: function(up, file) {
+                document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span>' + file.percent + "%</span>";
+            },
+
+            FileUploaded: function(up, file, data) {
+                var file_uploaded = JSON.parse(data.response);
+                var url_upload = '../uploads/img/';
+                var url_complete = url_upload + file_uploaded.name;
+                $("#avatar_fin_upload").show();
+                $("#before_avatar_upload").hide();
+                $("#dropzone_instructions").show();
+
+                $("#dropzone_instructions").html('<img class="avatar_edit_image" src="' + url_complete +'"/>');
+
+                $("#button_upload").html("Attrapez l'image pour l'ajuster");
+
+                    $(".button_valid_editavatar").click(function(){
+                        var avatar_id = $("#avatar_id").val();
+                        var blog = $("#blogusername").val();
+                        var Stoppos = $(".avatar_edit_image").position();
+                        $(".avatar_image_loader").show();
+                        $(".avatar_image").css("opacity", 0.3)
+                        $.ajax({
+                            type: "POST",
+                            url: Routing.generate('heliosblog_validavatar', { avatar: avatar_id, tempFilename: file_uploaded.name, blog: blog }),
+                            cache: false,
+                            success: function(data){
+                                $(".avatar_image_loader").hide();
+                                $(".avatar").html('<img class="avatar_image" style="margin-top:'+Stoppos.top+'px;" "src="'+data+'" alt="#" />');
+                            },
+                            error: function(xhr,err){
+                                $(".contenu_article").html(xhr.responseText);
+                            }
+                        });
+                        return false;
+                    });
+            },
+
+            Error: function(up, err) {
+                $('#console_upload').html("\nError #" + err.code + ": " + err.message);
+                $("#console_upload").show();
+            }
+        }
+    });
+
+    uploader.init();
+
+</script>

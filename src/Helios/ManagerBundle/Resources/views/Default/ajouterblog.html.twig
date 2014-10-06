@@ -1,0 +1,16 @@
+
+    <h3><span class="pas_encore_inscrit">Pas encore inscrit ?</span></h3>
+
+    <div class="well">
+        <form method="post" {{ form_enctype(form) }}>
+
+                {{ form_widget(form.user) }}
+            {{ form_rest(form) }}
+
+            <div class="btn_confirm">
+                <input type="submit" class="btn btn-primary" />
+            </div>
+
+        </form>
+
+    </div>

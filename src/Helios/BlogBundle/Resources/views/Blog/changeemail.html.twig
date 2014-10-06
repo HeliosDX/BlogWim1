@@ -1,0 +1,14 @@
+<form id="form_changeemail" action="{{ path('heliosblog_change_email', {'blogid': blog.id, 'blog': app.request.attributes.get('blog')}) }}" method="post" {{ form_enctype(form) }}>
+
+    <div class="input-group">
+        <span class="input-group-addon">@</span>
+        {{ form_widget(form.email) }}
+    </div>
+
+    <script>
+        $('.btn-disabled').prop('disabled', true)
+    </script>
+
+    <input type="submit" class="btn btn-primary" />
+
+</form>

@@ -1,0 +1,27 @@
+{% for notification in bloguser.notifs|reverse %}
+    <a href="#" class="link_show_msg{{ notification.id }}"><img class="image_avatar_notif" src={{ asset(notification.blog.avatar.webPath) }} alt="avatar" /><span class="notif">{{ notification.notif|raw }}</span></a>
+    <div class="notif_liste_comments{{ notification.id }}">
+        {{ render(controller('HeliosBlogBundle:Blog:voirByNotif', {'blog': notification.blog, 'article': notification.article, 'notif': notification })) }}
+    </div>
+    <script>
+        $(document).ready(function(){
+            $(".show_msg").click(function(){
+                $(".panel").slideToggle("slow");
+            });
+
+            $(".link_show_msg"+{{ notification.id }}).click(function(){
+                $(".notif_liste_comments"+{{ notification.id }}).slideToggle("slow");
+            });
+        });
+    </script>
+{% else %}
+    pas de notif
+{% endfor %}
+
+<style>
+    .panel
+    {
+        padding:5px;
+        display:none;
+    }
+</style>

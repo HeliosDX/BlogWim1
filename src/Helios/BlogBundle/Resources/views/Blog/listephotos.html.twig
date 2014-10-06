@@ -1,0 +1,25 @@
+{% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+    {% set bloguser = get_bloguser() %}
+    <input type="hidden" id="blog_username" value="{{ app.user.username }}" />
+{% endif %}
+
+<input id="avatar_id" type="hidden" value="{{ bloguser.avatar.id }}"/>
+<input id="blogusername" type="hidden" value="{{ bloguser.user.username }}"/>
+
+<div class="avatar_listephotos">
+    <img class="avatar_edit_image" src="{{ asset(bloguser.avatar.webPath) }}" />
+</div>
+
+    <a class="button_valid_editavatar" href="#">
+        <button type="button" class="btn btn-default" >
+            <span class="glyphicon glyphicon-chevron-left"></span>
+        </button>
+    </a>
+
+    <span> 1/6 </span>
+
+    <a class="button_valid_editavatar" href="#">
+        <button type="button" class="btn btn-default" >
+            <span class="glyphicon glyphicon-chevron-right"></span>
+        </button>
+    </a>

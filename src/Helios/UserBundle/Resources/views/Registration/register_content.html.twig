@@ -1,0 +1,10 @@
+<div class="well sidebar-nav padding5 padding-left10">
+    <ul class="nav nav-list">
+        <li class="nav-header">Identification</li>
+    </ul>
+    {# Le formulaire est exactement le même que dans "login", seul la présentation diffère un peu,
+       On ne met pas de label aux champs, mais des placeholders #}
+    <form action="{{ path('fos_user_registration_register') }}" {{ form_enctype(form) }} method="POST" class="fos_user_registration_register">
+        {{ form_widget(form) }}
+    </form>
+</div>

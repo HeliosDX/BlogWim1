@@ -1,0 +1,45 @@
+oneup_uploader:
+    resource: .
+    type: uploader
+
+fos_js_routing:
+    resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
+
+helios_manager:
+    resource: "@HeliosManagerBundle/Resources/config/routing.yml"
+    prefix:   /
+
+# On a séparé cet import afin de ne pas avoir le préfixe /blog lors de l'import
+HeliosBlogBundle:
+    resource: "@HeliosManagerBundle/Resources/config/routing_accueil.yml"
+    prefix:   /
+
+HeliosBlogBundlePrefix:
+    resource: "@HeliosBlogBundle/Resources/config/routing.yml"
+    prefix:   /{blog}
+    requirements:
+      blog: "^(?!login|login_check|logout|resetting|tag|profile|register)[^/]+"
+
+heliosblog_tag:
+    pattern:   /tag/{tag}
+    defaults:  { _controller: HeliosBlogBundle:Blog:tag }
+
+# Les imports pour FOSUB :
+fos_user_security:
+    resource: "@FOSUserBundle/Resources/config/routing/security.xml"
+
+fos_user_profile:
+    resource: "@FOSUserBundle/Resources/config/routing/profile.xml"
+    prefix: /profile
+
+fos_user_register:
+    resource: "@FOSUserBundle/Resources/config/routing/registration.xml"
+    prefix: /register
+
+fos_user_resetting:
+    resource: "@FOSUserBundle/Resources/config/routing/resetting.xml"
+    prefix: /resetting
+
+fos_user_change_password:
+    resource: "@FOSUserBundle/Resources/config/routing/change_password.xml"
+    prefix: /profile

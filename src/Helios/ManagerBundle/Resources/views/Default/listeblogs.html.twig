@@ -1,0 +1,38 @@
+{# Contenu de la page #}
+
+{% extends "HeliosManagerBundle::layout.html.twig" %}
+
+{% block heliosmanager_body %}
+
+    <div class="well">
+
+        <h3>
+            Espace d'administration
+        </h3>
+
+        <table class="table_blogs">
+        {% for blog in liste_blogs %}
+            <tr>
+                <td>
+                    {{ blog.name }}
+                </td>
+                <td>
+                    {{ blog.name }}
+                </td>
+                <td>
+                    <a href="{{ path('heliosmanager_modifierblog', {'id': blog.id}) }}" class="btn btn-medium btn-primary">
+                        <i class="icon-white icon-arrow-right"></i> Editer
+                    </a>
+                </td>
+                <td>
+                    <a href="{{ path('heliosmanager_supprimerblog', {'id': blog.id}) }}" class="btn btn-medium btn-primary">
+                        <i class="icon-white icon-arrow-right"></i> Supprimer
+                    </a>
+                </td>
+
+            </tr>
+        {% endfor %}
+        </table>
+    </div>
+
+{% endblock %}

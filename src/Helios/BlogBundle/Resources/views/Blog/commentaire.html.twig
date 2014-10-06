@@ -1,0 +1,35 @@
+{% set comment_notif = comment_notif|default(false) %}
+
+{# On utilise une macro Twig pour afficher :
+   * Soit le nom de l'auteur anonyme de l'auteur
+   * Soit son nom et un lien vers son profil s'il était identifié #}
+{% import "HeliosUserBundle::userHelpers.html.twig" as userHelpers %}
+
+<div class="commentBody {% if loop.last %} lastCommentBody {% endif %} {% if comment_notif %} comment_notif {% endif %}" id="comment{{ commentaire.id }}" itemscope itemtype="http://schema.org/Comment">
+  {% if is_granted('ROLE_ADMIN') %}
+    <div class="pull-right">
+      <a href="{{ path('heliosblog_supprimer_commentaire', {'id': commentaire.id}) }}" class="btn">
+        <i class="icon-trash"></i>
+      </a>
+    </div>
+  {% endif %}
+    <img class="image_avatar" src={{ asset(blog.avatar.webPath) }} alt="avatar" />
+    <i>
+        <span class="author_article" itemprop="author">{{ userHelpers.link(article.user, article.auteur) }}</span><br/>
+        Le <time datetime="{{ commentaire.date|date('c') }}" itemprop="datePublished">{{ commentaire.date|date('d/m/Y') }} à {{ commentaire.date|date('H:i') }}</time>,
+    </i>
+  <br />
+  {{ commentaire.contenu|markdown }}
+    <hr />
+    <div class="comments_action">
+        {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+            <a class="button_rep{{ article.id }}" href="#">
+                <button class="btn btn-default btn-xs" type="button">Répondre</button>
+            </a>
+        {% endif %}
+    </div>
+    <div class="likes">
+        <span id="nb_shares{{ article.id }}">{{  article.likes.count }}</span> <a id="button_like{{ article.id }}" href="#"><span class="glyphicon glyphicon-share"> </span></a>
+        <span class="modal_addarticle"  id="#">{{  article.likes.count }}</span> <a class="modal_addarticle" href="#"><span class="glyphicon glyphicon-thumbs-up"></span></a>
+    </div>
+</div>

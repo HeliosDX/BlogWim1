@@ -1,0 +1,14 @@
+{% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+
+<form id="form_add_comment" method="post" action="{{ path('heliosblog_ajouter_commentaire', {'id': article.id , 'blog': blog.user.username}) }}">
+    <div id="input_addcomment_avatar">
+        <img class="image_avatar" src={{ asset(blog.avatar.webPath) }} alt={{ blog.avatar.alt }} />
+        {{ form_widget(form.contenu) }}
+        {{ form_rest(form) }}
+    </div>
+    <div class="button_add_comment">
+        <input type="submit" value="Ajouter" class="btn btn-primary btn-xs" />
+    </div>
+</form>
+
+{% endif %}

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="author" content="Nicolas GAUTHIER">
+    <meta name="keywords" content="Symfony2, Symfony, Symfony2.1, Symfony2.2, tutoriel, tutorial, blog, checklist, livre, cours">
+    <link rel="alternate" type="application/rss+xml" title="Un blog goutû sur Symfony2" href="#{#{ url('heliosblog_feed') }#}">
+
+    <title>{% block title %}Helios Blog{% endblock %}</title>
+
+    {% block stylesheets %}
+        <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/themes/humanity/jquery-ui.css" type="text/css" />
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.2/css/bootstrap-select.min.css"/>
+      {% stylesheets output='css/main.css' filter='cssrewrite, ?yui_css'
+        'css/jPushMenu.css'
+        '@HeliosBlogBundle/Resources/public/css/bootstrap-navlist.css'
+        '@HeliosBlogBundle/Resources/public/css/form.css'
+        '@HeliosBlogBundle/Resources/public/css/main.css' %}
+        <link rel="stylesheet" href="{{ asset_url }}" type="text/css" />
+        {% endstylesheets %}
+    {% endblock %}
+  </head>
+
+  <body>
+
+    <!-- On inclut les variables globales spécifiques au blog -->
+    {% set blog = get_blog() %}
+    <input type="hidden" id="blogusername" value="{{ blog.user.username }}" />
+
+    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+        {% set bloguser = get_bloguser() %}
+        {% set session_username = get_session() %}
+        <input type="hidden" id="blog_username" value="{{ app.user.username }}" />
+    {% endif %}
+
+    {% include "header1.html.twig" %}
+
+    {% block bloglayout %}
+
+    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+        {% include "HeliosBlogBundle:Blog:menu_slide.html.twig" %}
+    {% endif %}
+
+    <div class="container">
+
+        {# On gère les messages flash de façon globale pour tout le bundle
+On peut catégoriser les messages dans différents sacs (bag),
+ici on les a mis dans "info", "success" et "error", qui correspondent aux classes CSS du Bootstrap #}
+
+        {% for type in ['info', 'success', 'error'] %}
+            {% for message in app.session.flashbag.get(type) %}
+                <div class="alert alert-{{ type }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endfor %}
+
+        <div class="row">
+            <div id="menu avatar_container" class="col-md-2">
+                <div class="avatar">
+                    <div class="btn-group options_avatar">
+                        <button type="button" class="btn btn-default btn-sm dropdown-toggle btnavatar" data-toggle="dropdown">
+                            <span class="glyphicon glyphicon-user"></span> Avatar <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a class="toggle-menu menu-left-uploadavatar" href="{{ path('heliosblog_uploadavatar', {'avatar': blog.avatar.id, 'blog': app.request.attributes.get('blog')}) }}"><span class="glyphicon glyphicon-upload"></span> Upload un avatar</a></li>
+                            <li><a class="toggle-menu menu-left-editavatar" href="{{ path('heliosblog_editavatar', {'avatar': blog.avatar.id, 'blog': app.request.attributes.get('blog')}) }}"><span class="glyphicon glyphicon-picture"></span> Ajuster l'avatar</a></li>
+                            <li class="divider"></li>
+                            <li><a class="toggle-menu menu-left-listavatars" href="{{ path('heliosblog_editavatar', {'avatar': blog.avatar.id, 'blog': app.request.attributes.get('blog')}) }}"><span class="glyphicon glyphicon-picture"></span> Mes photos</a></li>
+                        </ul>
+                    </div>
+                    {% if blog.avatar.alt != "default" %}
+                        <img class="avatar_image_loader" src="{{ asset('img/723.GIF') }}" />
+                        <img class="avatar_image" src="{{ asset(blog.avatar.webPath) }}" alt="{{ blog.avatar.alt }}"style="margin-top:{{ blog.avatar.positionY }}px;"/>
+                    {% else %}
+                        <img class="avatar_image" src="http://project.cavitte.fr/pictures/avatar_default.jpg" alt="{{ blog.avatar.alt }}" />
+                    {% endif %}
+                    <div id="dialog_avatar"></div>
+                </div>
+            </div>
+            <div id="menu" class="col-md-10">
+                <div class="presentation">
+                    <div class="presentation_name">
+                        {{ blog.name }}
+                        <img class="presentation_loader" src="{{ asset('img/712.GIF') }}" />
+                    </div>
+                    <div class="presentation_text">
+                        {{  blog.description }}
+                    </div>
+                    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') and app.user.username == app.request.attributes.get('blog') %}
+                    <div class="btn-group options_presentation">
+                        <button type="button" class="addavatar btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
+                            Présentation <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" id="menu_presentation" role="menu">
+                            <li><a class="toggle-menu menu-left-editname" href="#">Changer votre nom</a></li>
+                            <li><a class="toggle-menu menu-left" href="#">Changer votre présentation</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#"><li><a class="click" href="#">Modifier l'arrière-plan</a></li></a></li>
+                        </ul>
+                    </div>
+                    {% endif %}
+                    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') and app.user.username != app.request.attributes.get('blog')%}
+                    <div class="btn-group button_suivre">
+                        <a href="{{ path('heliosblog_ajouter_ami', {'ami': blog.id, 'bloguser': bloguser.id, 'blog': app.request.attributes.get('blog') }) }}"><button class="btn btn-default btn-sm" type="button">Suivre</button></a>
+                        <button type="button" class="btn btn-default btn-sm toggle-menu menu-right-chat">Envoyer un message</button>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+      <div class="row">
+        <div id="menu" class="col-md-3">
+            <div class="well sidebar-nav padding5">
+                <ul class="nav nav-list">
+                    <li class="nav-header">Blog</li>
+                    <li><a href="{{ path('heliosblog_accueil', {'blog': app.request.attributes.get('blog')}) }}">Accueil du blog</a></li>
+                    {# On n'affiche le lien pour ajouter un article qu'aux utilisateurs disposant du rôle ROLE_AUTEUR #}
+                    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                        {% if app.user.username == app.request.attributes.get('blog') %}
+                            <li><a href="{{ path('heliosblog_ajouter', {'blog': app.request.attributes.get('blog')}) }}">Ajouter un article</a></li>
+                        {% endif %}
+                    {% endif %}
+                </ul>
+            </div>
+
+          <!-- heliosCoreBundle::injectAdsense -->
+
+          {# On affiche les 3 derniers articles #}
+          {{ render(controller("HeliosBlogBundle:Blog:menu", {'nombre': 3})) }}
+
+          {# On affiche un coin espace membre en bas à gauche :
+             * Si le membre est identifié : lien de déconnexion
+             * Sinon : formulaire de connexion #}
+          {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+            <div class="well sidebar-nav padding5">
+                <ul class="nav nav-list">
+                  <li class="nav-header">Blog</li>
+                  <li>{{ 'layout.logged_in_as'|trans({'%username%': app.user.username}, 'FOSUserBundle') }}</li>
+                  <li><a href="{{ path('fos_user_security_logout') }}">{{ 'layout.logout'|trans({}, 'FOSUserBundle') }}</a></li>
+                </ul>
+            </div>
+          {# On affiche le formulaire de login, sauf sur la page de connexion #}
+          {% elseif app.request.attributes.get('_route') != 'fos_user_security_login' %}
+                {{ render(controller('HeliosUserBundle:Security:login')) }}
+          {% endif %}
+
+        </div>
+
+        {# Contenu central de la page #}
+        <div id="content" class="col-md-9">
+          {% block body %}
+          {% endblock %}
+        </div>
+      </div>
+
+      <hr>
+
+      <footer>
+        <p>
+          Projet généré avec Symfony2. - <a href="{{ path('heliosblog_feed', {'blog': app.request.attributes.get('blog')}) }}">Flux RSS Blog</a>
+          -
+          <a href="https://twitter.com/helios_" class="twitter-follow-button" data-show-count="false" data-lang="fr" data-dnt="true">Suivre @helios_</a>
+        </p>
+      </footer>
+    </div>
+
+  {% endblock %}
+
+    {% block javascripts %}
+      {# jQuery depuis le CDN de Google, ou fallback sur une copie locale #}
+      <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+      <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/jquery-ui.min.js"></script>
+      <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+      <script type="text/javascript" src="http://bp.yahooapis.com/2.4.21/browserplus-min.js"></script>
+      <script type="text/javascript" src="http://www.plupload.com/plupload/js/plupload.full.min.js"></script>
+      <script type="text/javascript" src="http://www.plupload.com/plupload/js/jquery.ui.plupload/jquery.ui.plupload.js"></script>
+        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.2/js/bootstrap-select.min.js"></script>
+        <script>window.jQuery || document.write('<script src="{{ asset('js/jquery.min.js') }}"><\/script>')</script>
+
+
+      {# Tous nos javascripts avec Assetic #}
+      {% javascripts output='js/main.js' filter='?yui_js'
+        'js/jPushMenu.js'
+        '@HeliosBlogBundle/Resources/public/js/slide.js'
+        '@HeliosBlogBundle/Resources/public/js/main.js'
+        '@HeliosBlogBundle/Resources/public/js/modals.js'%}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+        <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+        <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+      {% endjavascripts %}
+    {% endblock %}
+  </body>
+</html>

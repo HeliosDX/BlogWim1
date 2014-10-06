@@ -1,0 +1,76 @@
+{% extends 'form_div_layout.html.twig' %}
+
+{# On arrange la disposition du label, du widget et des erreurs qu'on harmonisera avec du CSS #}
+    {% block form_row %}
+        {% spaceless %}
+            <div class="form_table">
+                <label class="form_label">
+                    {{ form_label(form) }}
+                </label>
+                <label>
+                     {{ form_widget(form) }}
+                </label>
+            </div>
+            {{ form_errors(form) }}
+        {% endspaceless %}
+    {% endblock form_row %}
+
+{# On personnalise l'affichage des erreurs #}
+{% block form_errors %}
+    {% spaceless %}
+        {% if errors|length > 0 %}
+            <ul class="list-group">
+                {% for error in errors %}
+                    <li class="list-group-item">{{ error.message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endspaceless %}
+{% endblock form_errors %}
+
+{# Pour personnaliser un simple champ texte #}
+{% block form_widget_simple %}
+    {% spaceless %}
+        {% set type = type|default('text') %}
+        <input type="{{ type }}" {{ block('widget_attributes') }}
+                {% if value is not empty %}value="{{ value }}"
+                {% elseif id=="helios_blogbundle_articletype_titre" %}class="form-control" placeholder="facultatif (50 caractères maxi)"
+                {% elseif id=="helios_blogbundle_articletype_tags" %}class="form-control" placeholder="séparés par une virgule (ex: voiture,maison)"
+                {% elseif id=="helios_user_change_password_current_password" %}class="form-control" placeholder="{{ label|trans({}, translation_domain) }}"
+                {% elseif id=="helios_user_change_password_plainPassword_first" %}class="form-control" placeholder="{{ label|trans({}, translation_domain) }}"
+                {% elseif id=="helios_user_change_password_plainPassword_second" %}class="form-control" placeholder="{{ label|trans({}, translation_domain) }}"
+                {% endif %}
+        />
+    {% endspaceless %}
+{% endblock %}
+
+{# Pour personnaliser un textarea #}
+{% block textarea_widget %}
+    <div class="textarea_widget">
+        {{ parent() }}
+    </div>
+{% endblock %}
+
+{# Pour ajouter un astérisque sur les champs obligatoires #}
+{% block form_label %}
+
+    {% spaceless %}
+        {% if label is not sameas(false) %}
+            {% if not compound %}
+                {% set label_attr = label_attr|merge({'for': id}) %}
+            {% endif %}
+            {% if required %}
+                {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' required')|trim}) %}
+            {% endif %}
+            {% if label is empty %}
+                {% set label = name|humanize %}
+            {% endif %}
+            <span class="form_label"{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>{{ label|trans({}, translation_domain) }}
+            {% if required %}
+                <span class="required" title="Ce champ est obligatoire">(*)</span>
+            {% endif %}
+            </span>
+        {% endif %}
+    {% endspaceless %}
+
+{% endblock %}

@@ -1,0 +1,22 @@
+{# src/Helios/BlogBundle/Resources/views/Blog/menu.html.twig #}
+
+<div class="well sidebar-nav padding5">
+    <ul class="nav nav-list">
+        <li class="nav-header">Derniers articles</li>
+        <div class="dropdown">
+            <button class="btn btn-default btn-xs dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+                Options
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                <li role="presentation" class="dropdown-header">Nombre d'articles</li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">3 <span class="glyphicon glyphicon-ok"></span></a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">5</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">10</a></li>
+            </ul>
+        </div>
+        {% for article in liste_articles %}
+            <li><a href="{{ path('heliosblog_voir', {'slug': article.slug, 'blog': "azerty"}) }}">{{ article.titre }}</a></li>
+        {% endfor %}
+    </ul>
+</div>

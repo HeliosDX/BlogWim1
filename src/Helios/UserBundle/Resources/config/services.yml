@@ -1,0 +1,5 @@
+helios_user.change_password.form.type:
+    class: Helios\UserBundle\Form\ChangePasswordUserFormType
+    arguments: [%fos_user.model.user.class%]
+    tags:
+        - { name: form.type, alias: helios_user_change_password }

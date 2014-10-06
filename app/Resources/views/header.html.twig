@@ -1,0 +1,103 @@
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+            <ul class="nav secondary-nav">
+                <li class="dropdown-custom">
+                    <a class="brand dropdown-toggle-custom" href=""
+                       id="brandTitle">BlogMin</a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="" target="_blank" title="Voir le site"><i
+                                        class="icon-eye-open"></i> Voir le site</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+            <div class="nav-collapse collapse">
+
+                <ul class="nav">
+                    <li class="active"><a href=""><i class="icon-home"></i> Accueil</a></li>
+
+                    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown"
+                           href="#">Gestion Blogs
+                            <b class=caret></b></a>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                            <li><a href="{{ path('heliosmanager_listeblogs', {'user': app.user.id}) }}"> Mes blogs</a></li>
+                            <li><a href="{{ path('heliosmanager_ajouterblog') }}"><i class="icon-plus"></i> Ajouter un blog</a></li>
+                            {# On affiche les blogs de l'utilisateur #}
+                            {{ render(controller("HeliosManagerBundle:Default:menuListeBlogs", {'user': app.user.id})) }}
+                        </ul>
+                    </li>
+
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown"
+                               href="#"><i class="icon-white icon-user"></i> Social
+                                <b class=caret></b></a>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                <li><a href="{{ path('heliosmanager_ajouterblog') }}"><i class="icon-plus"></i> Ajouter un ami</a></li>
+                                {# On affiche les blogs de l'utilisateur #}
+                                {{ render(controller("HeliosManagerBundle:Default:menuListeBlogs", {'user': app.user.id})) }}
+                            </ul>
+                        </li>
+
+                        <li><a href="#"> Nom du blog : {{ app.request.attributes.get('blog') }} </a></li>
+
+                    {% endif %}
+
+                </ul>
+
+                <ul class="nav pull-right">
+
+                    <li><a href="#"><i class="icon-white icon-envelope"></i> Inbox <span class="badge">12</span></a></li>
+                    <li class="dropdown">
+
+                        {# On affiche un coin espace membre sur la toolbar en haut à droite :
+                       * Si le membre est identifié : on affiche dans la dropdown-menu ce qu'il peut faire + son pseudo
+                       * Sinon : formulaire de connexion #}
+                        {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="icon-white icon-user"></i> {{ app.user.username }} <b
+                                    class=caret></b></a>
+                        <ul id="menu_identification" class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                            <li><a href="dashboard/infos"><i class="icon-user"></i> Mes informations</a></li>
+                            <li><a href="dashboard/stats"><i class="icon-signal"></i> Statistiques</a></li>
+                            <li><a href="dashboard/tickets"><i class="icon-check"></i> Tickets / Erreurs</a></li>
+                            <li class=divider></li>
+                            <li><a href="private/admins">Gérer les administrateurs</a></li>
+                            <li><a href="dashboard/privileges">Gérer les privilèges</a></li>
+                            <li><a href="dashboard/logs">Consulter les logs</a></li>
+                            <li class=divider></li>
+                            <li><a href="dashboard/tool-box"><i class="icon-cogs"></i> Boite à outils</a></li>
+                            <li class=divider></li>
+                            <li><a href="{{ path('fos_user_security_logout') }}"><i class="icon-off"></i> Se déconnecter</a></li>
+                        </ul>
+
+                        {% elseif app.request.attributes.get('_route') != 'fos_user_security_login' %}
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="icon-white icon-user"></i> Sign in <b
+                                        class=caret></b></a>
+                            <ul id="menu_identification" class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                <li class="dropdown disabled">
+                                    {{ render(controller('HeliosUserBundle:Security:login')) }}
+                                </li>
+                            </ul>
+                        {% endif %}
+
+                    </li>
+
+                </ul>
+
+
+            </div>
+            <!--/.nav-collapse -->
+        </div>
+    </div>
+</div>

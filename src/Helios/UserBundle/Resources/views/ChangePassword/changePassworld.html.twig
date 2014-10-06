@@ -1,0 +1,12 @@
+{% extends "HeliosUserBundle::layout.html.twig" %}
+
+{% block body %}
+
+    {# S'il y a une erreur, on l'affiche dans un joli cadre #}
+    {% if error %}
+        <div class="alert alert-error">{{ error }}</div>
+    {% endif %}
+
+    {% include "HeliosUserBundle:ChangePassword:changePassword_content.html.twig" %}
+
+{% endblock %}

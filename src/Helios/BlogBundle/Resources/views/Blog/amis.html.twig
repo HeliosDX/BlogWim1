@@ -1,0 +1,5 @@
+{% for ami in app.user.myFriends %}
+        <a href="#" class="link_show_msg"><img class="image_avatar_amis" src="#" alt="avatar" /><span class="notif">{{ ami.username }}</span></a>
+{% else %}
+    Pas d'amis
+{% endfor %}

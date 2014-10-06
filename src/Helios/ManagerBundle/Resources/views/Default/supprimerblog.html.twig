@@ -1,0 +1,20 @@
+{# Contenu de la page #}
+
+{% extends "HeliosManagerBundle::layout.html.twig" %}
+
+{% block heliosmanager_body %}
+
+    <h2>Supprimer un blog</h2>
+
+    <p>
+        Etes-vous certain de vouloir supprimer le blog "{{ blog.name }}" ?
+    </p>
+
+    {# On met l'id de l'article dans la route de l'action du formulaire #}
+    <form action="{{ path('heliosmanager_supprimerblog', {'id': blog.id}) }}" method="post">
+
+        <input type="submit" value="Supprimer" class="btn btn-danger" />
+        {{ form_rest(form) }}
+    </form>
+
+{% endblock %}
