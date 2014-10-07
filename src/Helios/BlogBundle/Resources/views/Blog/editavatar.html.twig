@@ -1,0 +1,22 @@
+{% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+    {% set bloguser = get_bloguser() %}
+    <input type="hidden" id="blog_username" value="{{ app.user.username }}" />
+{% endif %}
+
+<input id="avatar_id" type="hidden" value="{{ bloguser.avatar.id }}"/>
+<input id="blogusername" type="hidden" value="{{ bloguser.user.username }}"/>
+
+<label for="disabledTextInput">"Attrapez" la photo pour l'ajuster !</label>
+
+    <div class="avatar_edit">
+        <img class="avatar_edit_image" src="{{ asset(bloguser.avatar.webPath) }}" />
+    </div>
+
+    <p id="initial_position"></p>
+    <p id="final_position"></p>
+
+    <a class="button_valid_editavatar" href="#">
+        <button type="button" class="btn btn-default" >
+            <span class="glyphicon glyphicon-ok"></span> Enregistrer
+        </button>
+    </a>

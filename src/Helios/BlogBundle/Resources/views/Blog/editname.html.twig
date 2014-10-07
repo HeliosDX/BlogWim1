@@ -1,0 +1,9 @@
+
+<form id="form_editname" action="{{ path('heliosblog_editname_ajax', {'blogid': blog.id, 'blog': app.request.attributes.get('blog')}) }}" method="post" {{ form_enctype(form) }}>
+
+    {{ form_widget(form) }}
+    {{ form_rest(form) }}
+
+    <input type="submit" class="btn btn-primary" />
+
+</form>

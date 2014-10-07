@@ -1,0 +1,30 @@
+{# Contenu de la page #}
+
+{% extends "HeliosManagerBundle::layout.html.twig" %}
+
+{% block heliosmanager_body %}
+
+        <div class="row">
+            <div id="menu" class="col-md-6 text_index">
+
+                <p class="title_site "style="font-size: 36px;"> BlogMin</p>
+                <p><span class="phrase_accroche">Créez votre blog en deux minutes chrono !</span></p>
+                <ul>
+                    <li>
+                        Partagez vos centres d'intérêt
+                    </li>
+                    <li>
+                        Faites-vous de nouveaux amis
+                    </li>
+                </ul>
+                Vous avez déjà un compte ? <a href="{{ path('fos_user_security_login') }}">Connectez-vous ! </a>
+            </div>
+
+            <div class="col-md-6 bloc_inscription">
+
+                {% include "HeliosManagerBundle:Default:ajouterblog.html.twig" %}
+
+            </div>
+        </div>
+
+{% endblock %}

@@ -1,0 +1,33 @@
+heliosmanager_index:
+    pattern:   /
+    defaults:  { _controller: HeliosManagerBundle:Default:index }
+    requirements:
+        page:  \d+
+
+heliosmanager_gestion:
+    pattern:   /gestion
+    defaults:  { _controller: HeliosManagerBundle:Default:gestion }
+
+heliosmanager_listeblogs:
+    pattern:   /listeblogs/{user}
+    defaults:  { _controller: HeliosManagerBundle:Default:listeBlogs }
+
+heliosmanager_ajouterblog:
+    pattern:   /ajouterblog
+    defaults:  { _controller: HeliosManagerBundle:Default:ajouterBlog }
+
+heliosmanager_ajouterarticle:
+    pattern:   /ajouterarticle
+    defaults:  { _controller: HeliosManagerBundle:Default:ajouterArticle }
+
+heliosmanager_modifierblog:
+    pattern:   /editblog/{id}
+    defaults:  { _controller: HeliosManagerBundle:Default:modifierBlog }
+    requirements:
+         id:  \d+
+
+heliosmanager_supprimerblog:
+    pattern:   /supprimerblog/{id}
+    defaults:  { _controller: HeliosManagerBundle:Default:supprimerBlog }
+    requirements:
+         id:  \d+

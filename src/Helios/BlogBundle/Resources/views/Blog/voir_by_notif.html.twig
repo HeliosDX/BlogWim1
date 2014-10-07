@@ -1,0 +1,7 @@
+{#% include "HeliosBlogBundle:Blog:article.html.twig" %#}
+
+  {% for commentaire in commentaires %}
+      {% include "HeliosBlogBundle:Blog:commentaire.html.twig" with {'comment_notif': true} %}
+  {% else %}
+      <p>Pas encore de commentaire.</p>
+  {% endfor %}

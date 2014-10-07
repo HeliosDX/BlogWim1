@@ -34,7 +34,8 @@
         "cboden/ratchet": "0.3.*",
         "react/zmq": "0.2.*|0.3.*",
         "theodo-evolution/session-bundle": "1.1.*@dev",
-        "oneup/uploader-bundle": "dev-master"
+        "oneup/uploader-bundle": "dev-master",
+        "leaseweb/memcache-bundle": "1.1.*@dev"
     },
     "scripts": {
         "post-install-cmd": [

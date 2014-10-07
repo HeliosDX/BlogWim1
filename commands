@@ -1,0 +1,10 @@
+Charger data fixtures:
+
+app/console doctrine:fixtures:load
+
+
+Activer un user:
+app/console fos:user:activate Username
+
+
+app/console doctrine:generate:entities

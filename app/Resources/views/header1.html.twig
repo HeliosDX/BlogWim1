@@ -1,0 +1,57 @@
+<nav class="navbar navbar-inverse navbar-fixed-top barre_navigation" role="navigation">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Blogwim</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href=""><span class="glyphicon glyphicon-home"></span> Accueil</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+
+                {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+<!--toggle-menu menu-right-article modal_addarticle -->
+                <li><a class="toggle-menu menu-right-article" href="#"><span class="glyphicon glyphicon-pencil"></span> Ajouter un article</a></li>
+                <li><a class="toggle-menu menu-right-chat" href="#"><span class="glyphicon glyphicon-envelope"></span>Messages</a></li>
+                <li><a class="toggle-menu menu-right-notifs" href="#"><span class="glyphicon glyphicon-bell"></span> Notifications <span class="badge">{{ bloguser.notifs.count }}</span></a></li>
+                <li><a class="toggle-menu menu-right-amis" href="#">Amis</a></li>
+                <li class="dropdown">
+
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> {{ app.user.username }} <b class="caret"></b></a>
+                    <ul class="dropdown-menu menu_user">
+                        <li><a class="toggle-menu menu-right-myinfos" href="#"><span class="glyphicon glyphicon-user"></span> Mes informations</a></li>
+                        <li><a class="toggle-menu menu-right-confidentiality" href="#"><span class="glyphicon glyphicon-open"></span> Confidentialité</a></li>
+                        <li><a href="#"><span class="glyphicon glyphicon-check"></span> Something else here</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">Separated link</a></li>
+                        <li class="divider"></li>
+                        <li><a href="{{ path('fos_user_security_logout') }}"><span class="glyphicon glyphicon-off"></span> Se déconnecter</a></li>
+                    </ul>
+
+                    {% elseif app.request.attributes.get('_route') != 'fos_user_security_login' %}
+
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> Sign in <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li class="dropdown disabled">
+                                {{ render(controller('HeliosUserBundle:Security:login')) }}
+                            </li>
+                        </ul>
+                    </li>
+
+                    {% endif %}
+
+                </li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
