@@ -33,7 +33,7 @@ class ChatServerTestCommand extends ContainerAwareCommand
     {
         //$chat = $this->getContainer()->get('heliosblog.chat');
         $memcache = new \Memcache();
-        $memcache->connect('37.59.61.227', 11211);
+        $memcache->connect('localhost', 11211);
 
         $server = IoServer::factory(
             new HttpServer(
