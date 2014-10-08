@@ -32,8 +32,8 @@ class ChatServerTestCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         //$chat = $this->getContainer()->get('heliosblog.chat');
-        $memcache = new \Memcached();
-        $memcache->addServer('37.59.61.227', 11211);
+        $memcache = new \Memcache();
+        $memcache->connect('37.59.61.227', 11211);
 
         $server = IoServer::factory(
             new HttpServer(
