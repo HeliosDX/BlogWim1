@@ -1,6 +1,6 @@
 <?php
 
-namespace Helios\BlogBundle\Command;
+namespace Helios\BlogBundle\Command; 
 
 //use Lsw\MemcacheBundle\DataCollector\MemcacheDataCollector;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
